@@ -51,11 +51,9 @@ Embedding = React.createClass
   render: ->
     {width, height, items} = @props
     D.svg {width, height},
-      D.g {},
-        D.g {ref: 'inner_svg'},
-          for item, idx in items
-            [x, y] = item.pos
-            D.circle({key: item.idx, r: 2.5, fill: colorScale(1/item.dist), transform: "translate(#{xScale(x)}, #{yScale(y)})"})
+      for item, idx in items
+        [x, y] = item.pos
+        D.circle({key: item.idx, r: 2.5, fill: colorScale(1/item.dist), transform: "translate(#{xScale(x)}, #{yScale(y)})"})
       D.rect {className: 'overlay', width, height, ref: 'overlay'}
 
 Top = React.createClass
