@@ -71,6 +71,7 @@ Top = React.createClass
     D.div {className: 'container'},
       Embedding {width: 500, height: 500, items: nearbyItems, onMouse}
       D.div {className: 'closest'},
+        "Closest items to the mouse:"
         ItemList({nearbyItems: nearbyItems[...10]})
 
 $ ->
