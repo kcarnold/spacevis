@@ -30,8 +30,8 @@ Embedding = React.createClass
   componentDidMount: ->
     {width, height, onMouse} = @props
 
-    xScale.domain([0, width]).range([0, width])
-    yScale.domain([0, height]).range([height, 0])
+    xScale.domain([-50, 50]).range([0, width])
+    yScale.domain([-50, 50]).range([height, 0])
 
     zoom = => @forceUpdate()
     overlay = d3.select(@refs.overlay.getDOMNode())
@@ -63,9 +63,10 @@ Top = React.createClass
     onMouse = (x, y) =>
       @setState {x, y}
 
-    D.div {},
+    D.div {className: 'container'},
       Embedding {width: 500, height: 500, positions: data.embedding, onMouse}
-      ClosestItems({x, y, n: 5})
+      D.div {className: 'closest'},
+        ClosestItems({x, y, n: 5})
 
 $ ->
   $.getJSON 'export.json', (_data) ->
