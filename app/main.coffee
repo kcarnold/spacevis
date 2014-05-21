@@ -54,6 +54,11 @@ Embedding = React.createClass
       for item, idx in items
         [x, y] = item.pos
         D.circle({key: item.idx, r: 2.5, fill: colorScale(1/item.dist), transform: "translate(#{xScale(x)}, #{yScale(y)})"})
+      for {idx, pos} in items[...5]
+        item = data.items[idx]
+        [x, y] = pos
+        text = item.shortText
+        D.text {key: item.idx, transform: "translate(#{xScale(x)}, #{yScale(y)})"}, text
       D.rect {className: 'overlay', width, height, ref: 'overlay'}
 
 Top = React.createClass
@@ -75,5 +80,10 @@ Top = React.createClass
 $ ->
   $.getJSON 'export.json', (_data) ->
     window.data = _data
+    for item in data.items
+      words = item.text.split(' ')
+      #words = (word for word in words when not word.lower() in ['of'])
+      start = _.random(words.length-3)
+      item.shortText = words[start...start+3].join(' ')
     console.log data
     React.renderComponent(Top(), document.body)
