@@ -29,6 +29,8 @@ colorScale = d3.scale.linear().domain([0, 1]).range(['grey', 'red']).clamp(true)
 
 
 Embedding = React.createClass
+  displayName: 'Embedding'
+
   componentDidMount: ->
     {width, height, onMouse} = @props
 
@@ -58,10 +60,11 @@ Embedding = React.createClass
         item = data.items[idx]
         [x, y] = pos
         text = item.shortText
-        D.text {key: item.idx, transform: "translate(#{xScale(x)}, #{yScale(y)})"}, text
+        D.text {key: idx, transform: "translate(#{xScale(x)}, #{yScale(y)})"}, text
       D.rect {className: 'overlay', width, height, ref: 'overlay'}
 
 Top = React.createClass
+  displayName: 'Top'
   getInitialState: -> {x: 0, y: 0}
 
   render: ->
