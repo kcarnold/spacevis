@@ -44,7 +44,6 @@ Embedding = React.createClass
         [px, py] = d3.mouse(overlay.node())
         x = xScale.invert(px)
         y = yScale.invert(py)
-        console.log x, y
         onMouse x, y
       )
       .call(d3.behavior.zoom().x(xScale).y(yScale).scaleExtent([1, 8]).on("zoom", zoom))
