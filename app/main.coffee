@@ -32,8 +32,8 @@ Embedding = React.createClass
   componentDidMount: ->
     {width, height, onMouse} = @props
 
-    xScale.domain([-50, 50]).range([0, width])
-    yScale.domain([-50, 50]).range([height, 0])
+    xScale.domain([-20, 20]).range([0, width])
+    yScale.domain([-20, 20]).range([height, 0])
 
     zoom = => @forceUpdate()
     overlay = d3.select(@refs.overlay.getDOMNode())
