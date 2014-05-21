@@ -14,17 +14,19 @@ sqeuclidean = (a, b) ->
 
 D = React.DOM
 
-ClosestItems = React.createClass
+ItemList = React.createClass
   render: ->
-    {x, y, n} = @props
-    items = for {idx} in itemsByProximity(x, y)[...n]
+    {nearbyItems} = @props
+    items = for {idx, dist} in nearbyItems
       item = data.items[idx]
-      D.li {key: idx}, item.text
+      D.li {key: idx, style: {color: colorScale(1/dist)}}, item.text
     D.ul {},
       items
 
 @xScale = d3.scale.linear()
 @yScale = d3.scale.linear()
+colorScale = d3.scale.linear().domain([0, 1]).range(['grey', 'red']).clamp(true)
+
 
 Embedding = React.createClass
   componentDidMount: ->
@@ -47,12 +49,13 @@ Embedding = React.createClass
     @forceUpdate()
 
   render: ->
-    {width, height, positions} = @props
+    {width, height, items} = @props
     D.svg {width, height},
       D.g {},
         D.g {ref: 'inner_svg'},
-          for [x, y], idx in positions
-            D.circle({key: idx, r: 2.5, transform: "translate(#{xScale(x)}, #{yScale(y)})"})
+          for item, idx in items
+            [x, y] = item.pos
+            D.circle({key: item.idx, r: 2.5, fill: colorScale(1/item.dist), transform: "translate(#{xScale(x)}, #{yScale(y)})"})
       D.rect {className: 'overlay', width, height, ref: 'overlay'}
 
 Top = React.createClass
@@ -63,10 +66,12 @@ Top = React.createClass
     onMouse = (x, y) =>
       @setState {x, y}
 
+    nearbyItems = itemsByProximity(x, y)
+
     D.div {className: 'container'},
-      Embedding {width: 500, height: 500, positions: data.embedding, onMouse}
+      Embedding {width: 500, height: 500, items: nearbyItems, onMouse}
       D.div {className: 'closest'},
-        ClosestItems({x, y, n: 5})
+        ItemList({nearbyItems: nearbyItems[...10]})
 
 $ ->
   $.getJSON 'export.json', (_data) ->
