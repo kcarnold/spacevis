@@ -50,17 +50,18 @@ Embedding = React.createClass
     @forceUpdate()
 
   render: ->
-    {width, height, items} = @props
+    {width, height, items, onClick} = @props
     D.svg {width, height},
       for item, idx in items
         [x, y] = item.pos
         D.circle({key: item.idx, r: 2.5, fill: colorScale(1/item.dist), transform: "translate(#{xScale(x)}, #{yScale(y)})"})
-      for {idx, pos} in items[...5]
+      for {idx, pos} in items
         item = data.items[idx]
+        continue unless item.labeled
         [x, y] = pos
-        text = item.shortText
+        text = item.text
         D.text {key: idx, transform: "translate(#{xScale(x)}, #{yScale(y)})"}, text
-      D.rect {className: 'overlay', width, height, ref: 'overlay'}
+      D.rect {className: 'overlay', width, height, ref: 'overlay', onClick}
 
 Top = React.createClass
   displayName: 'Top'
@@ -73,8 +74,14 @@ Top = React.createClass
 
     nearbyItems = itemsByProximity(x, y)
 
+    onClick = =>
+      closest = data.items[nearbyItems[0].idx]
+      closest.labeled = !closest.labeled
+      console.log closest
+      @forceUpdate()
+
     D.div {className: 'container'},
-      Embedding {width: 500, height: 500, items: nearbyItems, onMouse}
+      Embedding {width: 500, height: 500, items: nearbyItems, onMouse, onClick}
       D.div {className: 'closest'},
         "Closest items to the mouse:"
         ItemList({nearbyItems: nearbyItems[...10]})
