@@ -94,5 +94,6 @@ $ ->
       #words = (word for word in words when not word.lower() in ['of'])
       start = _.random(words.length-3)
       item.shortText = words[start...start+3].join(' ')
+      item.labeled = Math.random() < 1/6
     console.log data
     React.renderComponent(Top(), document.body)
